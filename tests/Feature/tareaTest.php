@@ -137,11 +137,38 @@ class tareaTest extends TestCase
     
     public function test_ModificarTareaInexistente()
     {
-        $response = $this -> put('/api/productos/5556735',[
+        $response = $this -> put('/api/tareas/5556735'[
 
         ]);
 
         $response->assertStatus(404);
 
     }
+
+    public function test_EliminarTareaExistente()
+    {
+        $response = $this -> put('/api/tareas/1');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            "mensaje" => "El producto con id 1 ha sido eliminado correctamente"
+        ]);
+
+       $this->assertDatabaseMissing('tareas', [
+        'id' => '1',
+        'deleted_at' => null
+        ]);
+
+        Producto::withTrashed()->where("id",1)->restore();
+    }
+
+    public function test_EliminarTareaInexistente()
+    {
+        $response = $this -> delete('/api/tareas/93223');
+
+        $response->assertStatus(404);
+    }
+
+
 }

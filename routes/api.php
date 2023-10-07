@@ -12,3 +12,4 @@ Route::post('/tareas', [TareaController::class,'InsertarTarea']);
 Route::get('/tareas', [TareaController::class,'ListarTareas']);
 Route::get('/tareas', [TareaController::class,'ListarUnaTarea']);
 Route::post('/tareas', [TareaController::class,'ListarUnaTarea']);
+Route::delet('/tareas', [TareaController::class,'EliminarTarea']);
