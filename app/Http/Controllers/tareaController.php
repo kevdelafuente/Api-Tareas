@@ -32,7 +32,7 @@ class tareaController extends Controller
     }
 
     public function ModificarTarea(Request $request, $id){
-        $producto=Producto::findOrFail($idProducto);
+        $tarea=tarea::findOrFail($id);
 
         $validation = Validator::make($request->all(), [
             'titulo' => 'required|string|max:255',
@@ -56,5 +56,45 @@ class tareaController extends Controller
 
     public function ListarUnaTarea(Request $request, $Id){
         return Tarea::findOrFail($Id);
+    }
+
+    public function EliminarTarea(Request $request, $Id){
+    $tarea=tarea::findOrFail($Id);
+
+    $tarea -> delete();
+
+    return [
+        "mensaje" => "La tarea con el id $Id ha sido eliminado correctamente"
+    ];
+    }
+
+    public function BuscarTareaSegunTitulo(request $request, $titulo){
+        $tareas = Tarea::where('titulo', $titulo)->get();
+
+        if ($tareas->isEmpty()) {
+            return response(['message' => 'No hay tareas con ese título'], 404);
+        }
+
+        return $tareas;
+    }
+
+    public function BuscarTareaSegunEstados(request $request, $estado){
+        $tareas = Tarea::where('estado', $estado)->get();
+
+        if ($tareas->isEmpty()) {
+            return response(['message' => 'No hay tareas con ese Estado'], 404);
+        }
+
+        return $tareas;
+    }
+
+    public function BuscarTareaSegunAutor(request $request, $autor){
+        $tareas = Tarea::where('autor', $autor)->get();
+
+        if ($tareas->isEmpty()) {
+            return response(['message' => 'No hay tareas con ese Autor'], 404);
+        }
+
+        return $tareas;
     }
 }

@@ -170,5 +170,35 @@ class tareaTest extends TestCase
         $response->assertStatus(404);
     }
 
+    public function test_BuscarPorTituloExistente()
+    {
+        $response = $this->get('/api/tareas/titulo/Cargador');
 
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            'titulo' => 'Cargador',
+        ]);
+    }
+    
+    public function test_BuscarPorEstadoExistente()
+    {
+        $response = $this->get('/api/tareas/estado/Completado');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            'titulo' => 'Completado',
+        ]);
+    }
+    public function test_BuscarPorAutorExistente()
+    {
+        $response = $this->get('/api/tareas/autor/Kevin');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            'titulo' => 'Kevin',
+        ]);
+    }
 }
