@@ -101,5 +101,47 @@ class tareaTest extends TestCase
 
     }
 
+    public function test_ModificarTarea()
+    {
+        $response->assertJsonStructure([
+            [
+               'id',
+               'Titulo',
+               'Contenido',
+               'Estado',
+               'Autor',
+               'created_at',
+               'updated_at',
+               'deleted_at'
+           ]
+        ]);
 
+        $response = $this -> post('/api/tareas/1',[
+            "titulo" => "GTA IV",
+            "contenido" => "Hackeando la matrix",
+            "estado" => "En proceso",
+            "autor" => "Gonzalito",
+        ]);
+
+        $response->assertStatus(200);
+
+        $response->assertJsonCount(7);
+
+        $this->assertDatabaseHas('tareas', [
+            "titulo" => "GTA IV",
+            "contenido" => "Hackeando la matrix",
+            "estado" => "En proceso",
+            "autor" => "Gonzalito",
+        ]);
+    }
+    
+    public function test_ModificarTareaInexistente()
+    {
+        $response = $this -> put('/api/productos/5556735',[
+
+        ]);
+
+        $response->assertStatus(404);
+
+    }
 }
