@@ -30,4 +30,12 @@ class tareaController extends Controller
 
         return $tarea;
     }
+
+    public function ListarTareas(Request $request){
+        return Tareas::all();
+    }
+
+    public function ListarUnaTarea(Request $request, $Id){
+        return Tarea::findOrFail($Id);
+    }
 }
