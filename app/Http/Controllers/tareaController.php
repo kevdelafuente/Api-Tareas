@@ -10,91 +10,120 @@ use Illuminate\Support\Facades\Validator;
 class tareaController extends Controller
 {
     public function InsertarTarea(Request $request){
-        
-        $validation = Validator::make($request->all(), [
-            'titulo' => 'required|string|max:255',
-            'contenido' => 'required|string|max:255',
-            'estado' => 'required|string|max:25',
-            'autor' => 'required|string|min:3|max:255',
-        ]);
-
-        if($validation->fails())
-            return response($validation->errors(),403);
-
-        $tarea=new Tarea();
-        $tarea -> titulo = $request -> post ('titulo');
-        $tarea -> contenido = $request -> post ('contenido');
-        $tarea -> estado = $request -> post ('estado');
-        $tarea -> autor = $request -> post ('autor');
-        $tarea -> save();
-
-        return $tarea;
+        try {
+            $validation = Validator::make($request->all(), [
+                'titulo' => 'required|string|max:255',
+                'contenido' => 'required|string|max:255',
+                'estado' => 'required|string|max:25',
+                'autor' => 'required|string|min:3|max:255',
+            ]);
+    
+            if($validation->fails())
+                return response($validation->errors(),403);
+    
+            $tarea=new Tarea();
+            $tarea -> titulo = $request -> post ('titulo');
+            $tarea -> contenido = $request -> post ('contenido');
+            $tarea -> estado = $request -> post ('estado');
+            $tarea -> autor = $request -> post ('autor');
+            $tarea -> save();
+    
+            return $tarea;
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 500); 
+        }
     }
-
+    
     public function ModificarTarea(Request $request, $id){
-        $tarea=tarea::findOrFail($id);
-
-        $validation = Validator::make($request->all(), [
-            'titulo' => 'required|string|max:255',
-            'contenido' => 'required|string|max:255',
-            'estado' => 'required|string|max:25',
-            'autor' => 'required|string|min:3|max:255',
-        ]);
-
-        if($validation->fails())
-            return response($validation->errors(),403);
-
-        $tarea -> update($request->all());
-        $tarea -> save();
-
-        return $tarea;
+        try {
+            $tarea=tarea::findOrFail($id);
+    
+            $validation = Validator::make($request->all(), [
+                'titulo' => 'required|string|max:255',
+                'contenido' => 'required|string|max:255',
+                'estado' => 'required|string|max:25',
+                'autor' => 'required|string|min:3|max:255',
+            ]);
+    
+            if($validation->fails())
+                return response($validation->errors(),403);
+    
+            $tarea -> update($request->all());
+            $tarea -> save();
+    
+            return $tarea;
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 500); 
+        }
     }
-
+    
     public function ListarTareas(Request $request){
-        return Tareas::all();
+        try {
+            return Tareas::all();
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 500); 
+        }
     }
-
+    
     public function ListarUnaTarea(Request $request, $Id){
-        return Tarea::findOrFail($Id);
+        try {
+            return Tarea::findOrFail($Id);
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 404); 
+        }
     }
-
+    
     public function EliminarTarea(Request $request, $Id){
-    $tarea=tarea::findOrFail($Id);
-
-    $tarea -> delete();
-
-    return [
-        "mensaje" => "La tarea con el id $Id ha sido eliminado correctamente"
-    ];
+        try {
+            $tarea=tarea::findOrFail($Id);
+            $tarea -> delete();
+            return [
+                "mensaje" => "La tarea con el id $Id ha sido eliminada correctamente"
+            ];
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 500); 
+        }
     }
-
+    
     public function BuscarTareaSegunTitulo(request $request, $titulo){
-        $tareas = Tarea::where('titulo', $titulo)->get();
-
-        if ($tareas->isEmpty()) {
-            return response(['message' => 'No hay tareas con ese título'], 404);
+        try {
+            $tareas = Tarea::where('titulo', $titulo)->get();
+    
+            if ($tareas->isEmpty()) {
+                return response(['mensaje' => 'No hay tareas con ese título'], 404);
+            }
+    
+            return $tareas;
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 500); 
         }
-
-        return $tareas;
     }
-
+    
     public function BuscarTareaSegunEstados(request $request, $estado){
-        $tareas = Tarea::where('estado', $estado)->get();
-
-        if ($tareas->isEmpty()) {
-            return response(['message' => 'No hay tareas con ese Estado'], 404);
+        try {
+            $tareas = Tarea::where('estado', $estado)->get();
+    
+            if ($tareas->isEmpty()) {
+                return response(['mensaje' => 'No hay tareas con ese estado'], 404);
+            }
+    
+            return $tareas;
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 500); 
         }
-
-        return $tareas;
     }
-
+    
     public function BuscarTareaSegunAutor(request $request, $autor){
-        $tareas = Tarea::where('autor', $autor)->get();
-
-        if ($tareas->isEmpty()) {
-            return response(['message' => 'No hay tareas con ese Autor'], 404);
+        try {
+            $tareas = Tarea::where('autor', $autor)->get();
+    
+            if ($tareas->isEmpty()) {
+                return response(['mensaje' => 'No hay tareas con ese autor'], 404);
+            }
+    
+            return $tareas;
+        } catch (\Exception $e) {
+            return response(['error' => $e->getMessage()], 500); 
         }
-
-        return $tareas;
     }
 }
